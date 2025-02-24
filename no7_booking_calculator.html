@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>民宿報價計算</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        h1 {
+            color: #2a7da2;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2a7da2;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #1e5b7a;
+        }
+        textarea {
+            height: 300px;
+            resize: none;
+        }
+    </style>
+    <script>
+        function generateMessage() {
+            const name = document.getElementById('name').value.trim();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const adults = parseInt(document.getElementById('adults').value, 10) || 0;
+            const children = parseInt(document.getElementById('children').value, 10) || 0;
+
+            if (!name || adults <= 0 || !startDate || !endDate) {
+                alert('請輸入所有必要資訊（姓名、入住日期、退房日期、大人數量）');
+                return;
+            }
+
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            if (isNaN(start.getTime()) || isNaN(end.getTime()) || start >= end) {
+                alert('請輸入有效的入住與退房日期');
+                return;
+            }
+
+            const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            const totalCost = 6750 * nights;
+
+            const message = `您好${name}貴賓晚上好，${startDate}-${endDate}，共${nights}天${nights - 1}晚，${adults}位大人${children}個小孩，2個房間，（1間4人房+1間雙人房）2.3樓包棟服務，目前尚有空房尚可預約😊\n\n` +
+                `2間房間（1間4人房+1間雙人房）1套獨立廚房，1套榻榻米客廳、2套獨立浴室，2套免治藍光LED抗菌廁所，1台Toshiba滾筒式洗脫烘洗衣機、2台Panasonic奈米空氣清淨機、1台Dyson吹風機。\n\n` +
+                `${adults}位大人${children}個小孩，1晚上包棟費用台幣$6750*${nights}晚=總額台幣$${totalCost}（已含清潔費）\n\n` +
+                `我們位於大阪難波附近的熱鬧區，整棟只會接待您ㄧ組貴賓做使用，2間房間（1間4人房+1間雙人房）1套獨立廚房，1套榻榻米客廳，2套獨立浴室（1套泡澡浴缸），2套免治藍光LED抗菌廁所，1台Toshiba滾筒式洗脫烘洗衣機、2台Panasonic奈米空氣清淨機。\n\n` +
+                `這是我們民宿的導覽介紹給貴賓做參考😊\n` +
+                `https://fb.watch/xYlPR7dPyc/\n\n` +
+                `地點離地鐵御堂筋大國町車站只需步行約3分鐘😊,難波車站僅需一站即可到達;若是從機場到民宿不需轉車,南海機場專線到新今宮站之後步行約6分鐘即可到民宿。\n\n` +
+                `民宿周邊近大約徒步6分鐘唐吉軻德（營業到半夜5點）有life超商(營業到晚上12點）玉出超市（24小時營業），鳥貴族居酒屋餐廳等等，非常便利喔！\n\n` +
+                `衷心期待有這個機會能為您服務🙇🏼‍♀️`;
+
+            document.getElementById('output').value = message;
+        }
+
+        function copyMessage() {
+            const outputField = document.getElementById('output');
+            outputField.select();
+            navigator.clipboard.writeText(outputField.value).then(() => {
+                alert('已複製訊息！');
+            }).catch(err => {
+                console.error('複製失敗', err);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>民宿報價計算</h1>
+    <label for="name">姓名：</label>
+    <input type="text" id="name" placeholder="請輸入您的姓名">
+    
+    <label for="startDate">入住日期（開始）：</label>
+    <input type="date" id="startDate">
+
+    <label for="endDate">入住日期（結束）：</label>
+    <input type="date" id="endDate">
+
+    <label for="adults">大人數量：</label>
+    <input type="number" id="adults" min="1" placeholder="請輸入大人數量">
+
+    <label for="children">小孩數量：</label>
+    <input type="number" id="children" min="0" placeholder="請輸入小孩數量">
+
+    <button onclick="generateMessage()">生成訊息</button>
+    <button onclick="copyMessage()">複製訊息</button>
+
+    <h2>生成的訊息：</h2>
+    <textarea id="output" readonly></textarea>
+</body>
+</html>
